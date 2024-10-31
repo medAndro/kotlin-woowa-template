@@ -12,8 +12,8 @@ class ApplicationTest : NsTest() {
     fun `기능 테스트`() {
         assertRandomNumberInRangeTest(
             {
-                run("pobi,woni", "1")
-                assertThat(output()).contains("pobi : -", "woni : ", "최종 우승자 : pobi")
+                run("1", "1")
+                assertThat(output()).contains("1 + 1 = 2")
             },
             MOVING_FORWARD, STOP
         )
@@ -22,7 +22,7 @@ class ApplicationTest : NsTest() {
     @Test
     fun `예외 테스트`() {
         assertSimpleTest {
-            assertThrows<IllegalArgumentException> { runException("pobi,javaji", "1") }
+            assertThrows<IllegalArgumentException> { runException("1", "a") }
         }
     }
 

@@ -1,16 +1,13 @@
 package template.domain
 
-import template.model.DummyModel
+import template.model.NumberBasket
 
 class GameService {
-    fun findWinnerNames(dummyModels: List<DummyModel>): List<String> {
-        val maxDistance = dummyModels.maxOf { it.distance }
-        val winners = dummyModels.filter { it.distance == maxDistance }
-
-        return winners.map { it.name }
+    fun plusTwoNumber(numberBasket: NumberBasket): Int {
+        return numberBasket.getNumbers().sum()
     }
 
-    companion object {
-        private const val MAX_RANDOM = 9
+    fun getExpression(numberBasket: NumberBasket): String {
+        return numberBasket.getNumbers().joinToString(separator = " + ")
     }
 }

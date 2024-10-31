@@ -1,18 +1,25 @@
 package template.resources
 
-object Messages {
-    // 입력 안내 메시지
-    const val GAME_START = "게임을 시작합니다"
+enum class Messages(private val message: String) {
+    INFO("[INFO] %s"),
+    SUM_START_HEADER("덧셈을 시작합니다"),
+    LEFT_VALUE_INPUT("좌변의 값을 입력하세요"),
+    RIGHT_VALUE_INPUT("우변의 값을 입력하세요"),
+    SUM_RESULT(
+        """
+        덧셈 결과
+        ---
+        %s = %s
+        """.trimIndent()
+    ),
 
-    // 게임 결과 메시지
-    const val GAME_RESULT_HEADER = "<게임 결과>"
+    ERROR("[ERROR] %s"),
+    EMPTY_INPUT("입력값이 비어있습니다."),
+    NOT_INTEGER("입력값이 정수가 아닙니다."),
+    INVALID_ERROR("알 수 없는 오류가 발생했습니다.");
 
-    // 에러 메시지
-    const val ERROR_FORMAT = "[ERROR] %s"
-
-    const val ERROR_EMPTY_INPUT = "입력값이 비어있습니다."
-    const val ERROR_DUPLICATE_NAME = "컬렉션에 중복값이 존재합니다"
-
-    const val ERROR_OVERSIZE_TRY_COUNT = "너무 크거나 잘못된 입력입니다."
-    const val ERROR_NOT_POSITIVE = "양의 정수만 입력 가능합니다."
+    fun message(): String = message
+    fun infoMessage(): String = INFO.formattedMessage(message)
+    fun errorMessage(): String = ERROR.formattedMessage(message)
+    fun formattedMessage(vararg args: Any): String = String.format(message, *args)
 }

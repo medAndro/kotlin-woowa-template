@@ -3,8 +3,8 @@ package template.controller
 import template.view.GameView
 import template.domain.InputValidator
 import template.domain.GameService
-import template.model.DummyModel
-import template.resources.Messages
+import template.model.NumberBasket
+import template.resources.Messages.*
 
 class GameController(
     private val gameView: GameView,
@@ -12,16 +12,37 @@ class GameController(
     private val gameService: GameService
 ) {
     fun gameStart() {
-        gameView.showGameStart()
-        gameView.showMessage(Messages.GAME_RESULT_HEADER)
-        announceFinalWinner()
+        val numberBasket = generateNumberBasket()
+        gameView.showMessage(SUM_START_HEADER.message())
+        gameView.showBlankLine()
+
+        announceSumNumbers(numberBasket)
     }
 
-    private fun announceFinalWinner() {
-        val winnersName = gameService.findWinnerNames(
-            listOf(DummyModel("1호", 10), DummyModel("2호"))
-        )
-        gameView.showMessage("우승자 : ${winnersName.joinToString()}")
+    private fun generateNumberBasket(): NumberBasket {
+        val basket = NumberBasket()
+
+        basket.addNumber(readNumberWithRetry(LEFT_VALUE_INPUT.infoMessage()))
+        basket.addNumber(readNumberWithRetry(RIGHT_VALUE_INPUT.infoMessage()))
+
+        return basket
+    }
+
+    private fun readNumberWithRetry(infoMessage: String): Int {
+        while (true) {
+            try {
+                gameView.showMessage(infoMessage)
+                return validator.validateInteger(gameView.readLine())
+            } catch (e: IllegalArgumentException) {
+                gameView.showMessage(e.message ?: INVALID_ERROR.errorMessage())
+            }
+        }
+    }
+
+    private fun announceSumNumbers(numberBasket: NumberBasket) {
+        val expression = gameService.getExpression(numberBasket)
+        val sumValue = gameService.plusTwoNumber(numberBasket)
+        gameView.showMessage(SUM_RESULT.formattedMessage(expression, sumValue))
     }
 
     companion object {
